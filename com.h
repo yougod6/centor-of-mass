@@ -1,8 +1,38 @@
 #pragma once
-#include <math.h>
-#include <stdbool.h>
+#include<math.h>
+
+/*
+0. Stance recognition
+1. Transformation matrix (alpha, a, d, theta)
+    a. HW informaiton
+        i. Twist
+        ii. link lenght
+        iii. link offset 
+        iv. joint angle 
+    : return 'n' Transformation matrices address array
+        (n : # of links)
+
+2. Chain rule -> w.r.t base frame 
+    : return 'n' Transformation matrices address array
+      w.r.t base Frame (n : # of links)  
+
+3. calculate Centor of Mass 
+    a. Chain rule data
+    b. CoM of each link (x,y,z)
+    c. mass of each link
+    d. calculate CoM 
+    return : CoM of total mass (x,y,z) 
+
+4. calculate Base of Support 
+*/
+
+
+
 
 /**
+ * for the STANCE, DOF and BASE_FRAME is changed
+ * 1. DOF -> change # of transformation matrix 
+ * 2. BASE_FRAME -> change direction of transformation  
  SWING = 0,
  HEEL_STRIKE=1,
  MID_STANCE=2,
@@ -36,7 +66,7 @@ typedef struct {
     double x;
     double y;
     double z;
-}LinkCOM;
+}CoM;
 
 //bos data struct
 typedef struct {
@@ -44,18 +74,9 @@ typedef struct {
 	double right;
 }BOS;
 
-// get Sensor Data , TBD 
-BodyAngle* get_angles();
+void get_angles(BodyAngle* pBodyAngle);
 
-// compute Base Of Step
-void calculate_BOS(BOS *pBOS);
-	
-// compute Centor Of Mass 
-void calculate_COM(double* pCOM);
+void dh_parameter(const double link_len, const double link_offset, const double joint_rad,double(*dh_mat)[4]);
 
-// check COM is stable , TBD
-bool check_stability(BOS *pBOS, double* pCOM);
+// double* dh_matrices(const Stance* stance,const BodyAngle* angle);
 
-void transformation(transformated_position);
-
-void dh_parameter(const BodyAngle* angle);

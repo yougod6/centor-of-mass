@@ -1,78 +1,49 @@
+#include "com.h"
 #define _USE_MATH_DEFINES
 
-#include "com.h"
-
 // get Sensor Data , TBD 
-BodyAngle* get_angles(){
-	BodyAngle angle;
+void get_angles(BodyAngle* pBodyAngle){
+	pBodyAngle->left_leg.hip = (M_PI/180)*32.5;
+	pBodyAngle->left_leg.knee = (M_PI/180)*32.4;
+	pBodyAngle->left_leg.ankle =(M_PI/180)* 32.4;
 
-	angle.left_leg.hip = 32.5;
-	angle.left_leg.knee = 32.4;
-	angle.left_leg.ankle = 32.4;
-
-	angle.right_leg.hip = 32.5;
-	angle.right_leg.knee = 32.4;
-	angle.right_leg.ankle = 32.4;
+	pBodyAngle->right_leg.hip = (M_PI/180)*32.5;
+	pBodyAngle->right_leg.knee = (M_PI/180)*32.4;
+	pBodyAngle->right_leg.ankle = (M_PI/180)*32.4;
 	
-	angle.back.roll = 4.3;
-
-	BodyAngle *pBodyAngle = &angle;
-
-	return pBodyAngle;
+	pBodyAngle->back.roll = (M_PI/180)*4.3;
+}
+// alpha, a, d, theta 
+// let alpha = 0
+void dh_parameter(const double link_len, const double link_offset, const double joint_rad,double(*dh_mat)[4]){
+    dh_mat[0][0]=cos(joint_rad);
+    dh_mat[0][1]=-sin(joint_rad);
+    dh_mat[1][0]=sin(joint_rad);
+    dh_mat[1][1]=cos(joint_rad);
+    dh_mat[2][2]=1;
+    dh_mat[2][3]=link_offset;
+    dh_mat[3][3]=1; 
 }
 
+// double* dh_matrices(const Stance* stance,const BodyAngle* angle){
+//     // if(stance==SWING){
+//         double* T01 = (double*)malloc(sizeof(double)*16);
+//         double* T12 = (double*)malloc(sizeof(double)*16);
+//         double* T23 = (double*)malloc(sizeof(double)*16);
+//         dh_parameter(0,0,angle->left_leg.hip,T01);
+//         dh_parameter(0,0,angle->left_leg.hip,T12);
+//         dh_parameter(0,0,angle->left_leg.hip,T23);
+//         double* dh_matrices[3] = {T01,T12,T23};
+//         return dh_matrices;
+//     // }
+//     // else if(stance==HEEL_STRIKE || stance==MID_STANCE){
 
-void transformation(const Stance* stance,const BodyAngle* angle){
-    
-    if(stance==SWING){
-
-    }
-    else if(stance==HEEL_STRIKE || stance==MID_STANCE){
-
-    }
-    //stace == TOE-OFF
-    else{
+//     // }
+//     // //stace == TOE-OFF
+//     // else{
         
-    }
+//     // }
         
-}
-
-// compute Centor Of Mass 
-void calculate_COM(double* pCOM){
-    const double upper_mass;
-    const double torso_mass;
-    const double thigh_mass;
-    const double shank_mass;
-
-    //tranformation code
-    
-
-    //
-
-}
-
-
-void dh_parameter(Stance* stance, const BodyAngle* angle){
-    if(stance==SWING){
-        //create 
-        
-    }
-    
-}
-
-
-
-double[4][4] dh(Stance* stance){
-    const double l_i;
-    const double d_i;
-    const double q_i=angle->left_leg.hip;
-    double dh[4][4] ={
-        { cos(q_i), -sin(q_i), 0, 0},
-        { sin(q_i), cos(q_i), 0, 0},
-        { 0, 0, 1, d_i},
-        {0, 0, 0, 1}
-    };
-    //배열의 주소 리턴
-}
+// }
 
 
