@@ -1,7 +1,10 @@
 CMAKE_MINIMUM_REQUIRED ( VERSION 2.8 )
 PROJECT (centor-of-mass)
+set( TEST_DH_SRCS src/test_dh_parameter.c src/dh_parameter.c )
+set( TEST_BODYSENSOR_SRCS src/test_body_sensor.c src/body_sensor.c)
+ADD_COMPILE_OPTIONS ( -g -Wall )
 MESSAGE ( ${CMAKE_PROJECT_NAME} )
-SET( TEST_DH_SRCS test_dh_parameter.c dh_parameter.c )
-SET( TEST_BODYSENSOR_SRCS test_body_sensor.c body_sensor.c)
+
+INCLUDE_DIRECTORIES ( include )
 ADD_EXECUTABLE( test_dh_parameter ${TEST_DH_SRCS} )
 ADD_EXECUTABLE( test_body_sensor ${TEST_BODYSENSOR_SRCS} )
