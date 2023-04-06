@@ -9,7 +9,7 @@ int main(){
     //test_matrix_multiplication
     test_matrix_mul();
 
-    //test_chain_rule
+    //test_chain_rule 
     test_chain_rule();
 
     //test_dh_parameter
