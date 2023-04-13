@@ -48,7 +48,7 @@ typedef struct {
     double x;
     double y;
     double z;
-}CoM;
+}COM;
 
 //bos data struct
 typedef struct {

@@ -6,4 +6,6 @@ d2_CoM/
 
 build/
 
+output/ 
+
 .DS_Store

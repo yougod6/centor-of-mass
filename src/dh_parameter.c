@@ -11,6 +11,8 @@
 //     }
 // }
 
+
+
 /**
  * Transformation Matrix from i-1 to i
  * @param TransArgs : alpha, a, d, theta
@@ -100,7 +102,7 @@ void test_matrix_mul(){
 
 
 // 4x4 행렬의 곱을 구하는 함수
-// 두 행렬의 주소를 인자로 받음
+// 두 행렬의 주소(이름)를 인자로 받음
 // 결과를 두번째 행렬에 저장
 void chain_rule(double(*mat1)[4],double(*mat2)[4]){
     double temp[4][4] = {0,};
