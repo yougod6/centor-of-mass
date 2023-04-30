@@ -54,7 +54,7 @@ void calculate_COM(const Stance* stance,double(*dh[])[4],COM* com){
     else return;
 }
 
-void check_COM(COM* com,double(*dh[])[4]){
+void test_COM(COM* com,double(*dh[])[4]){
     double thigh_vector[4] = {0.6,0.23,0.0012,1};
     double shank_vector[4] = {0.31,0.12,0.001,1};
     double foot_vector[4] = {0.13,0.02,0.0003,1};

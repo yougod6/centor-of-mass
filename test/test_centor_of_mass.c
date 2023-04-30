@@ -36,6 +36,6 @@ int main(){
     printf("centor-of-mass-y : %f\n",com.y);
     printf("centor-of-mass-z : %f\n",com.z);
 
-    check_COM(&com,transformations);
+    test_COM(&com,transformations);
     return 0;
 }
