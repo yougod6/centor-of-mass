@@ -33,8 +33,6 @@ void dh_parameter(TransArgs* args, double(*dh_mat)[4]);
 void chain_rule(double(*mat1)[4],double(*mat2)[4]);
 void matrix_mul(double(*mat1)[4],double(*mat2)[4],double(*result)[4]);
 void print_matrix(double(*mat)[4]);
+void transform_to_base(const double (*matrix)[4], double *vector);
+void vector_scalar_multiple(const double scalar, double* vector);
 
-void test_base_trans_matrices();
-void test_dh_parameter();
-void test_chain_rule();
-void test_matrix_mul();

@@ -1,5 +1,21 @@
 #pragma once
 
+//HW information
+#define TORSO_LENGTH 0.71
+#define THIGH_LENGTH 0.64
+#define SHANK_LENGTH 0.35
+#define FOOT_LENGTH 0.28
+
+#define TORSO_MASS 32.8
+#define THIGH_MASS 23.1
+#define SHANK_MASS 11.4
+#define FOOT_MASS 1.6
+
+// extern const double TORSO_MASS __attribute__((section("__DATA, .rom_data"))) = 32.8;
+// extern const double THIGH_MASS __attribute__((section("__DATA, .rom_data"))) = 23.1;
+// extern const double SHANK_MASS __attribute__((section("__DATA, .rom_data"))) = 11.4;
+// extern const double FOOT_MASS __attribute__((section("__DATA, .rom_data"))) = 1.6;
+
 /**
  * SWING = 0 
  * HEEL_STRIKE=1 
@@ -11,7 +27,7 @@ typedef enum{
     HEEL_STRIKE,
     MID_STANCE,
     TOE_OFF
-}Stance;
+}GaitPhase;
 
 /**
  * Transformation Arguments of DH-parameter

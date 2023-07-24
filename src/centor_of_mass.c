@@ -1,42 +1,24 @@
 #include "dh_parameter.h"
 #include "exo_msgs.h"
 #include <stdio.h>
-const double THIGH_MASS __attribute__((section("__DATA, .rom_data"))) = 3.1;
-const double SHANK_MASS __attribute__((section("__DATA, .rom_data"))) = 1.4;
-const double FOOT_MASS __attribute__((section("__DATA, .rom_data"))) = 0.6;
 
 
-void transform_to_base(double (*matrix)[4], double *vector) {
-    static double result[4];
-    int i, j;
 
-    for (i = 0; i < 4; i++) {
-        result[i] = 0.0;
-        for (j = 0; j < 4; j++) {
-            result[i] += matrix[i][j] * vector[j];
-        }
-    }
-    // Update the vector's value with the result
-    for (i = 0; i < 4; i++) {
-        vector[i] = result[i];
-    }
-}
-
-void vector_scalar_multiple(double scalar, double* vector){
-    for (int i = 0; i < 3; i++) {
-        vector[i] = vector[i] * scalar;
-    }
-}
-
-
-void calculate_COM(const Stance* stance,double(*dh[])[4],COM* com){
-    if(*stance==SWING){
-        double thigh_vector[4] = {0.6,0.23,0.0012,1};
-        double shank_vector[4] = {0.31,0.12,0.001,1};
-        double foot_vector[4] = {0.13,0.02,0.0003,1};
-        transform_to_base(dh[0],thigh_vector);
-        transform_to_base(dh[1],shank_vector);
-        transform_to_base(dh[2],foot_vector);
+/**
+ * calculate Centor of Mass (without Upper-Body Robot)
+ * @param stacne : detected gait phase
+ * @param dh : array of T_i w.r.t base frame 
+ * @return : Centor of Mass w.r.t base frame
+*/
+COM calculate_COM(const GaitPhase* gait,double(*dh[])[4]){
+    COM com;
+    if(*gait==SWING){
+        double thigh_vector[4] = {0.6,0.23,0.0012,1}; // Thigh link CoM w.r.t frame 1
+        double shank_vector[4] = {0.31,0.12,0.001,1}; // Shank link CoM w.r.t frame 2
+        double foot_vector[4] = {0.13,0.02,0.0003,1}; // Foot link CoM w.r.t frame 3
+        transform_to_base(dh[0],thigh_vector); // T01
+        transform_to_base(dh[1],shank_vector); // T02
+        transform_to_base(dh[2],foot_vector);  // T03
         
         double com_vector[4]={0,0,0,1};
         double total_mass = THIGH_MASS + SHANK_MASS + FOOT_MASS;
@@ -46,15 +28,66 @@ void calculate_COM(const Stance* stance,double(*dh[])[4],COM* com){
             foot_vector[i] *= FOOT_MASS;
             com_vector[i] = (thigh_vector[i] + shank_vector[i] + foot_vector[i])/(total_mass);
         }
-        com->x = com_vector[0];
-        com->y = com_vector[1];
-        com->z = com_vector[2];
-        return;
+        com.x = com_vector[0];
+        com.y = com_vector[1];
+        com.z = com_vector[2];
     }
-    else return;
+    else if(*gait == HEEL_STRIKE || *gait == MID_STANCE){
+        double shank_vector[4] = {0.31,0.12,0.001,1}; // Shank link CoM w.r.t frame 1
+        double thigh_vector[4] = {0.6,0.23,0.0012,1}; // Thigh link CoM w.r.t frame 2
+        double torso_vector[4] = {0.41,0.18,0.05,1}; // Torso link CoM w.r.t frame 3
+
+        transform_to_base(dh[0],shank_vector); // T01
+        transform_to_base(dh[1],thigh_vector); // T02
+        transform_to_base(dh[2],torso_vector);  // T03
+
+        double com_vector[4]={0,0,0,1};
+        double total_mass =  SHANK_MASS + THIGH_MASS + TORSO_MASS;
+        for(int i=0; i<3; i++){
+            shank_vector[i] *= SHANK_MASS;
+            thigh_vector[i] *= THIGH_MASS;
+            torso_vector[i] *= TORSO_MASS;
+            com_vector[i] = (shank_vector[i] + thigh_vector[i] + torso_vector[i])/(total_mass);
+        }
+        com.x = com_vector[0];
+        com.y = com_vector[1];
+        com.z = com_vector[2];
+    }
+    // TOE_OFF 
+    else{
+        double foot_vector[4] = {0.13,0.02,0.0003,1}; // Foot link CoM w.r.t frame 3
+        double shank_vector[4] = {0.31,0.12,0.001,1}; // Shank link CoM w.r.t frame 1
+        double thigh_vector[4] = {0.6,0.23,0.0012,1}; // Thigh link CoM w.r.t frame 2
+        double torso_vector[4] = {0.41,0.18,0.05,1}; // Torso link CoM w.r.t frame 3
+
+        transform_to_base(dh[0],foot_vector);  // T01
+        transform_to_base(dh[1],shank_vector); // T02
+        transform_to_base(dh[2],thigh_vector); // T03
+        transform_to_base(dh[3],torso_vector); // T04
+
+        double com_vector[4]={0,0,0,1};
+        double total_mass =  FOOT_MASS + SHANK_MASS + THIGH_MASS + TORSO_MASS;
+        for(int i=0; i<3; i++){
+            foot_vector[i] *= FOOT_MASS;
+            shank_vector[i] *= SHANK_MASS;
+            thigh_vector[i] *= THIGH_MASS;
+            torso_vector[i] *= TORSO_MASS;
+            com_vector[i] = (foot_vector[i] + shank_vector[i] + thigh_vector[i] + torso_vector[i])/(total_mass);
+        }
+        com.x = com_vector[0];
+        com.y = com_vector[1];
+        com.z = com_vector[2];
+    }
+    
+    return com;
 }
 
-void test_COM(COM* com,double(*dh[])[4]){
+
+/**
+ * check Centor of Mass is right
+ * @param com : Centor of mass (return of calculate_COM function)
+*/
+void check_COM(COM* com,double(*dh[])[4]){
     double thigh_vector[4] = {0.6,0.23,0.0012,1};
     double shank_vector[4] = {0.31,0.12,0.001,1};
     double foot_vector[4] = {0.13,0.02,0.0003,1};

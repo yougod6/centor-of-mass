@@ -1,7 +1,8 @@
+#pragma once
+
 #include "exo_msgs.h"
 #include "dh_parameter.h"
 
-void transform_to_base(double (*matrix)[4], double *vector);
-void vector_scalar_multiple(double scalar, double* vector);
-void calculate_COM(const Stance* stance,double (*dh[])[4],COM* com);
-void test_COM(COM* com,double(*dh[])[4]);
+
+COM calculate_COM(const GaitPhase* gait,double (*dh[])[4]);
+void check_COM(COM* com,double(*dh[])[4]);

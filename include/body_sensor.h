@@ -3,5 +3,3 @@
 
 // get Sensor Data , TBD 
 void get_angles(BodyAngle* pBodyAngle);
-
-void test_get_angles();
