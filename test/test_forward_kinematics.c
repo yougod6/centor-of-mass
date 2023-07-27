@@ -7,7 +7,7 @@ int main(){
     BodyAngle* pBodyAngle = &bodyAngle;
     get_angles(pBodyAngle);
 
-    GaitPhase gait = TOE_OFF;
+    GaitPhase gait = SWING;
     if(gait==TOE_OFF){
         double result_arr[12];
         forward_kinematics(&gait,pBodyAngle,result_arr);
@@ -29,6 +29,5 @@ int main(){
             }
         }
     }
-    
     return 0;
 }
